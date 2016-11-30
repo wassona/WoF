@@ -9,13 +9,20 @@ header {
 .letterSpace {
 	display: inline-block;
 	width: 5.5vw;
-	height: 18vh;
+	height: 14vh;
 	border:.5px dashed black;
 	background-color: aqua;
+	text-align: center;
+	vertical-align: top;
+	line-height: 1.5em;
+	font-size: 2em;
+	font-family: Arial;
+	font-weight: bolder;
+
 }
 
 #wrapper {
-	height: 80vh;
+	height: 60vh;
 	width: 80vw;
 	margin: 0 auto;
 	border: 3px solid aquamarine;
@@ -24,4 +31,17 @@ header {
 
 #letter0, #letter13, #letter42, #letter55 {
 	background-color: transparent;
+}
+
+#playSpace {
+	height: 20vh;
+	width: 40vw;
+	margin: 0 auto;
+	border: 1px solid black;
+	text-align: center;
+	line-height: 2em;
+}
+
+#playInput {
+	text-align: center;
 }

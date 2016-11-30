@@ -88,8 +88,9 @@ function play(){
 		checkBoard(consonant2);
 		checkBoard(consonant3);
 		checkBoard(vowel1);
-		playSpace.innerHTML = "Make your final guess!<br/><input type='text' id='playInput'/>";
-		document.getElementById('playInput').addEventListener('keyup', finalGuess, false);
+		playSpace.innerHTML = "Make your final guess!<br/><input type='text' id='playInput'/><br/><button id='submit'>Submit</button>";
+		document.getElementById('playInput').focus();
+		document.getElementById('submit').addEventListener('click', finalGuess, false);
 	}
 
 	function isConsonant(event) {
@@ -126,6 +127,14 @@ function play(){
 		}
 	}
 
-	function finalGuess(){}
-
+	function finalGuess(){
+		for (var i = 0; i < word.length; i++) {
+			document.getElementById("letter"+(preSpace+i)).innerText = word[i];
+		}
+		if (document.getElementById('playInput').value.toUpperCase() === word){
+			playSpace.innerHTML = "<br/><h1>Congratulations!</h1>";
+		} else {
+			playSpace.innerHTML = "<br/><h1>Sorry! " + document.getElementById('playInput').value.toUpperCase() + " is incorrect.</h1>";
+		}
+	}
 }

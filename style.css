@@ -1,0 +1,27 @@
+h1 {
+	margin: 0px;
+}
+
+header {
+	text-align: center;
+}
+
+.letterSpace {
+	display: inline-block;
+	width: 5.5vw;
+	height: 18vh;
+	border:.5px dashed black;
+	background-color: aqua;
+}
+
+#wrapper {
+	height: 80vh;
+	width: 80vw;
+	margin: 0 auto;
+	border: 3px solid aquamarine;
+	background-color: teal;
+}
+
+#letter0, #letter13, #letter42, #letter55 {
+	background-color: transparent;
+}

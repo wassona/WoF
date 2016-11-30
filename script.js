@@ -1,7 +1,10 @@
 document.getElementById('start').addEventListener('click', play, false);
 
 var letterSpaceId = 0,
-	playSpace = document.getElementById("playSpace");
+	playSpace = document.getElementById("playSpace"),
+	phrase = setPhrase(),
+	word = setWord(),
+	preSpace = (Math.ceil((14-phrase.length)/2)+14);
 
 var letterSpace = function() {
 	this.gen = function(){
@@ -16,32 +19,71 @@ for (var i = 0; i < 56; i++) {
 	space.gen();
 }
 
-function recolorTiles(word) {
+function setWord(){
+	return words[Math.floor(Math.random()*723)].toUpperCase();
+};
+
+function setPhrase(){
+	return phrases[Math.floor(Math.random()*723)].toUpperCase();
+};
+
+function recolorTiles(phrase) {
 
 	// currently does not work properly for entries over 14 letters
-	let length = word.length;
-	let preSpace = (Math.ceil((14-word.length)/2)+14);
-	for (var i = 14; i < 28; i++) {
+	let length = phrase.length,
+		preSpace = (Math.ceil((14-phrase.length)/2)+14),
+		specialChar = "-!&():;',./? ";
+	
+	//reset the board
+	for (var i = 1; i < 55; i++) {
 		document.getElementById("letter"+i).style.backgroundColor = 'aqua';
 		document.getElementById('letter'+i).innerText = "";
-	}	
-	for (var i = preSpace; i < (word.length + preSpace); i++) {
-		document.getElementById("letter"+i).style.backgroundColor = 'white';
 	}
+
+	//check for the phrase for special characters
+	for (var i = 0; i < specialChar.length; i++) {
+		checkBoard(specialChar[i]);
+	}
+
+	for (var i = preSpace; i < (phrase.length + preSpace); i++) {
+		document.getElementById("letter"+i).style.backgroundColor = 'white';
+		if (document.getElementById("letter"+i).innerHTML == " ") {
+			document.getElementById("letter"+i).style.backgroundColor = "aqua";
+		}
+	}
+
 
 }
 
+function checkBoard(char) {
+	//lettersTried.push(char);
+	//document.getElementById('display').innerHTML = "Letters Tried:<br/>"+lettersTried.join('<br/>');
+	for (var i = 0; i < phrase.length; i++) {
+		if (char === phrase[i]) {
+			document.getElementById("letter"+(preSpace+i)).innerText = char;
+		}
+	}
+}
+
 function play(){
-	let word = words[Math.floor(Math.random()*723)].toUpperCase(),
-		preSpace = (Math.ceil((14-word.length)/2)+14);
+	word = setWord();
+	phrase = setPhrase();
+	preSpace = (Math.ceil((14-phrase.length)/2)+14);
+	let freebies = ["R","S","T","L","N","E"],
+		lettersTried = [],
 		vowels = "AEIOU",
 		counter = 0,
 		consonant1 = "",
 		consonant2 = "",
 		consonant3 ="",
 		vowel1 = "";
-	console.log(word);
-	recolorTiles(word);
+	console.log(phrase);
+	recolorTiles(phrase);
+
+	for (var i = 0; i < freebies.length; i++) {
+		checkBoard(freebies[i]);
+	}
+
 	stateOne();
 
 
@@ -119,19 +161,12 @@ function play(){
 		}
 	}
 
-	function checkBoard(char) {
-		for (var i = 0; i < word.length; i++) {
-			if (char === word[i]) {
-				document.getElementById("letter"+(preSpace+i)).innerText = char;
-			}
-		}
-	}
 
 	function finalGuess(){
-		for (var i = 0; i < word.length; i++) {
-			document.getElementById("letter"+(preSpace+i)).innerText = word[i];
+		for (var i = 0; i < phrase.length; i++) {
+			document.getElementById("letter"+(preSpace+i)).innerText = phrase[i];
 		}
-		if (document.getElementById('playInput').value.toUpperCase() === word){
+		if (document.getElementById('playInput').value.toUpperCase() === phrase){
 			playSpace.innerHTML = "<br/><h1>Congratulations!</h1>";
 		} else {
 			playSpace.innerHTML = "<br/><h1>Sorry! " + document.getElementById('playInput').value.toUpperCase() + " is incorrect.</h1>";

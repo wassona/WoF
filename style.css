@@ -45,3 +45,12 @@ header {
 input {
 	text-align: center;
 }
+
+#display {
+	position: absolute;
+	left: 3px;
+	top: 15vh;
+	width: 8vw;
+	height: 50vh;
+	background-color: lightblue;
+}

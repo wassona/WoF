@@ -1,5 +1,8 @@
 var lettersTried = [];
+var spun = 0;
 document.getElementById('start').addEventListener('click', play, false);
+document.getElementById('spin').addEventListener('click', spin, false);
+document.getElementById('wheel2').addEventListener('click', spin, false);
 
 var letterSpaceId = 0,
 	playSpace = document.getElementById("playSpace"),
@@ -59,9 +62,7 @@ function setRow(line, row=0) {
 	}
 }
 
-function checkChars(char,line, preSpace) {
-			//lettersTried.push(char);
-			//document.getElementById('display').innerHTML = "Letters Tried:<br/>"+lettersTried.join(' ');
+function checkChars(char,line,preSpace) {
 			for (var i = 0; i < line.length; i++) {
 				if (char === line[i]) {
 					document.getElementById("letter"+(preSpace+i)).innerText = char;
@@ -189,16 +190,22 @@ function boardFormatter() {
 
 	switch (result.phase) {
 		case 1:
+			setRow("",0);
 			setRow(result.line1, 1);
+			setRow("",2);
+			setRow("",3);
 			break;
 		case 2:
+			setRow("",0);
 			setRow(result.line1,1);
 			setRow(result.line2,2);
+			setRow("",3);
 			break;
 		case 3:
 			setRow(result.line1,0);
 			setRow(result.line2,1);
 			setRow(result.line3,2);
+			setRow("",3)
 			break;
 		case 4:
 			setRow(result.line1,0);
@@ -213,12 +220,12 @@ function boardFormatter() {
 }
 
 function play(){
+	lettersTried = [];
 	word = setWord();
 	phrase = setPhrase();
 	let freebies = ["R","S","T","L","N","E"],
 		row = 0,
 		preSpace = row * 0,
-		lettersTried = [],
 		vowels = "AEIOU",
 		counter = 0,
 		consonant1 = "",
@@ -319,5 +326,46 @@ function play(){
 		} else {
 			playSpace.innerHTML = "<br/><h1>Sorry! " + document.getElementById('playInput').value.toUpperCase() + " is incorrect.</h1>";
 		}
+		lettersTried = [];
+		document.getElementById('display').innerHTML = "Letters Tried:<br/>"+lettersTried.join(' ');
+
 	}
 }
+
+var curve = [];
+for (var i = 0; i < 3; i += .075){
+	curve.push(Math.sin(i-1.5)+1);
+}
+console.log(curve);
+
+
+function spin(){
+	let rand = Math.floor(Math.random()*361),
+		check = true,
+		slice = ["Lose a Turn", 700, "Free Play", 650, "Bankrupt", 900, "1/2 Car1", 550, 600, "BR/M/BR", 700, "Gift", 800, 600, 700, 900, "Wild", 2500, "Bankrupt", 900, "1/2 Car2", 650, "Prize", 800]
+	for (var i = 0; i < 20; i++) {
+		let inc = i*curve[i]*200;
+		up = window.setTimeout(flick, 0 + inc, -20);
+		back = window.setTimeout(flick, 100 + inc, 0);
+		down = window.setTimeout(flick, 200 + inc, -20);
+		again = window.setTimeout(flick, 300 + inc, 0);	
+	}
+	document.getElementById("wheel2").style.transform = "rotate(" + (spun + 1080 + rand) +"deg)";
+	spun += 1080 + rand;
+	let landOn = Math.floor(((spun % 360) - 7)/15);
+	console.log(rand, landOn, slice[landOn]);
+
+
+}
+
+function flick(degrees){
+	document.getElementById("pointer").style.transform = "rotate("+degrees+"deg)";
+	document.getElementById("inner").style.transform = "rotate("+degrees+"deg)";
+}
+
+
+
+
+
+
+

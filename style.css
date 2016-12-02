@@ -1,3 +1,7 @@
+body {
+	font-family: Helvetica;
+}
+
 h1 {
 	margin: 0px;
 }
@@ -8,7 +12,7 @@ header {
 
 .letterSpace {
 	display: inline-block;
-	width: 5.5vw;
+	width: 4.1vw;
 	height: 14vh;
 	border:.5px dashed black;
 	background-color: aqua;
@@ -22,8 +26,10 @@ header {
 }
 
 #wrapper {
+	position: relative;
+	right: 10vw;
 	height: 60vh;
-	width: 80vw;
+	width: 60vw;
 	margin: 0 auto;
 	border: 3px solid aquamarine;
 	background-color: teal;
@@ -34,6 +40,8 @@ header {
 }
 
 #playSpace {
+	position: relative;
+	right: 10vw;
 	height: 20vh;
 	width: 40vw;
 	margin: 0 auto;
@@ -53,4 +61,38 @@ input {
 	width: 8vw;
 	height: 50vh;
 	background-color: lightblue;
+}
+
+#wheel2 {
+	position: absolute;
+	top: -25vh;
+	right: -110vh;
+	height: 150vh;
+	width: 150vh;
+	border: 1px solid gold;
+	border-radius: 100vh;
+	overflow: hidden;
+	background-image: url('assets/Wheel_Round_1.png');
+	transition: transform 4s cubic-bezier(0.17, -0.12, 0.27, 0.98);
+	background-size: cover;
+}
+
+#pointer {
+	position: absolute;
+    top: 45vh;
+    right: 36vh;
+    border-top: 6vh solid transparent;
+    border-bottom: 6vh solid transparent;
+    border-left: 18vh solid yellow;
+    transition: transform .1s;
+}
+
+#inner {
+	position: absolute;
+    top: 46vh;
+    right: 38vh;
+    border-top: 5vh solid transparent;
+    border-bottom: 5vh solid transparent;
+    border-left: 15vh solid red;
+    transition: transform .1s;
 }

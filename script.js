@@ -1,8 +1,16 @@
-var lettersTried = [];
-var spun = 0;
-document.getElementById('start').addEventListener('click', play, false);
-document.getElementById('spin').addEventListener('click', spin, false);
-document.getElementById('wheel2').addEventListener('click', spin, false);
+var lettersTried = [],
+	spun = 0,
+	vowels = "AEIOU",
+	counter = 0,
+	consonant1,
+	consonant2,
+	consonant3,
+	vowel1,
+	lines,
+	winnings = 0;
+document.getElementById('start').addEventListener('click', start, false);
+// document.getElementById('spin').addEventListener('click', spin, false);
+// document.getElementById('wheel2').addEventListener('click', spin, false);
 
 var letterSpaceId = 0,
 	playSpace = document.getElementById("playSpace"),
@@ -54,12 +62,12 @@ function setRow(line, row=0) {
 		if (document.getElementById("letter"+i).innerHTML == " ") {
 			document.getElementById("letter"+i).style.backgroundColor = "aqua";
 		}
-	
+	}
 	document.getElementById("letter0").style.backgroundColor = "transparent";
 	document.getElementById("letter13").style.backgroundColor = "transparent";
 	document.getElementById("letter42").style.backgroundColor = "transparent";
 	document.getElementById("letter55").style.backgroundColor = "transparent";
-	}
+	
 }
 
 function checkChars(char,line,preSpace) {
@@ -219,125 +227,66 @@ function boardFormatter() {
 
 }
 
-function play(){
+function finalGuess(){
+	for (var i = 0; i < phrase.length; i++) {
+		checkLines(phrase[i], lines)
+	}
+	if (document.getElementById('playInput').value.toUpperCase() === phrase){
+		playSpace.innerHTML = "<br/><h1>Congratulations!</h1>";
+	} else {
+		playSpace.innerHTML = "<br/><h1>Sorry! " + document.getElementById('playInput').value.toUpperCase() + " is incorrect.</h1>";
+	}
 	lettersTried = [];
-	word = setWord();
-	phrase = setPhrase();
-	let freebies = ["R","S","T","L","N","E"],
-		row = 0,
-		preSpace = row * 0,
-		vowels = "AEIOU",
-		counter = 0,
-		consonant1 = "",
-		consonant2 = "",
-		consonant3 ="",
-		vowel1 = "",
-		lines = boardFormatter();
-	console.log(phrase);
+	document.getElementById('display').innerHTML = "Letters Tried:<br/>"+lettersTried.join(' ');
 
-	for (var i = 0; i < freebies.length; i++) {
-		checkLines(freebies[i],lines);
-	}
+}
 
-	stateOne();
-
-
-
-	function stateOne(vowel=0) {
-		if (vowel) {
-			playSpace.innerHTML = vowel + "'s not a consonant! Please enter a consonant!<br/><input type='text' id='playInput'/>";
-		} else {
-			playSpace.innerHTML = "Let's play! Please enter a consonant!<br/><input type='text' id='playInput'/>";
-		}
-		document.getElementById('playInput').addEventListener('keyup', isConsonant, false);
-		document.getElementById('playInput').focus();
-	}
-
-	function stateTwo(char) {
-		switch (counter) {
-			case 0:
-				consonant1 = char;
-				break;
-			case 1:
-				consonant2 = char;
-				break;
-			case 2:
-				consonant3 = char;
-				stateThree();
-				break;
-		}
-		counter++;
-	
-	}
-
-	function stateThree(consonant=0) {
-		if (consonant) {
-			playSpace.innerHTML = consonant +  "'s not a vowel! Please enter a vowel!<br/><input type='text' id='playInput'/>";
-		} else {
-			playSpace.innerHTML = "Good job! Please enter a vowel!<br/><input type='text' id='playInput'/>";
-		}
-		document.getElementById('playInput').addEventListener('keyup', isVowel, false);
-		document.getElementById('playInput').focus();
-	}
-
-	function stateFour() {
-		checkLines(consonant1,lines);
-		checkLines(consonant2,lines);
-		checkLines(consonant3,lines);
-		checkLines(vowel1,lines);
-		playSpace.innerHTML = "Make your final guess!<br/><input type='text' id='playInput'/><br/><button id='submit'>Submit</button>";
-		document.getElementById('playInput').focus();
-		document.getElementById('submit').addEventListener('click', finalGuess, false);
-	}
-
-	function isConsonant(event) {
-		let test = document.getElementById('playInput').value.slice(-1).toUpperCase();
-			document.getElementById('playInput').value = "";
-		if (!vowels.includes(test) && test !== test.toLowerCase()) {
-			stateTwo(test);
-		}	else if (vowels.includes(test)) {
-			stateOne(test);
-		}	else {
-			stateOne(test);
-		}
-
-	}
-
-	function isVowel(event) {
-		let test = document.getElementById('playInput').value.slice(-1).toUpperCase();
-			document.getElementById('playInput').value = "";
-		if (vowels.includes(test) && test !== test.toLowerCase()) {
-			vowel1 = test;
-			stateFour();
-		}	else if (!vowels.includes(test)) {
-			stateThree(test);
-		}	else {
-			stateThree(test);
-		}
-	}
-
-
-	function finalGuess(){
-		for (var i = 0; i < phrase.length; i++) {
-			checkLines(phrase[i], lines)
-		}
-		if (document.getElementById('playInput').value.toUpperCase() === phrase){
-			playSpace.innerHTML = "<br/><h1>Congratulations!</h1>";
-		} else {
-			playSpace.innerHTML = "<br/><h1>Sorry! " + document.getElementById('playInput').value.toUpperCase() + " is incorrect.</h1>";
-		}
-		lettersTried = [];
-		document.getElementById('display').innerHTML = "Letters Tried:<br/>"+lettersTried.join(' ');
-
+function isConsonant(event) {
+	let test = document.getElementById('playInput').value.slice(-1).toUpperCase();
+		document.getElementById('playInput').value = "";
+	if (!vowels.includes(test) && test !== test.toLowerCase()) {
+		checkLines(test,lines);
+		basePhase();
+	}	else if (vowels.includes(test)) {
+		consonantGuess(test);
+	}	else {
+		consonantGuess(test);
 	}
 }
+
+function isVowel(event) {
+	console.log("vowel");
+	let test = document.getElementById('playInput').value.slice(-1).toUpperCase();
+	document.getElementById('playInput').value = "";
+	if (vowels.includes(test) && test !== test.toLowerCase()) {
+		checkLines(test,lines);
+		basePhase();
+	}	else if (!vowels.includes(test)) {
+		vowelGuess(test);
+	}	else {
+		vowelGuess(test);
+	}
+}
+
+
 
 var curve = [];
 for (var i = 0; i < 3; i += .075){
 	curve.push(Math.sin(i-1.5)+1);
 }
-console.log(curve);
 
+function start() {
+	phrase = setPhrase();
+	lines = boardFormatter();
+	basePhase();
+}
+
+function basePhase() {
+	playSpace.innerHTML = "Let's play! Spin the wheel!<br/><button id='spin'>Spin!</button><button id='vowel'>Buy a vowel!</button><button id='solve'>Solve the puzzle!</button>";
+	document.getElementById('spin').addEventListener('click', spin, false);
+	document.getElementById('vowel').addEventListener('click', vowelPass, false)
+	document.getElementById('solve').addEventListener('click', bonusStateFour, false);
+}
 
 function spin(){
 	let rand = Math.floor(Math.random()*361),
@@ -351,16 +300,43 @@ function spin(){
 		again = window.setTimeout(flick, 300 + inc, 0);	
 	}
 	document.getElementById("wheel2").style.transform = "rotate(" + (spun + 1080 + rand) +"deg)";
+	document.getElementById('spin').disabled = "true";
 	spun += 1080 + rand;
 	let landOn = Math.floor(((spun % 360) - 7)/15);
-	console.log(rand, landOn, slice[landOn]);
+	consonantGuess();
+}
 
+function consonantGuess(vowel=0) {
+	if (vowel) {
+		playSpace.innerHTML = vowel + "'s not a consonant! Please enter a consonant!<br/><input type='text' id='playInput'/>";
+	} else {
+		playSpace.innerHTML = "Nice spin! Please enter a consonant!<br/><input type='text' id='playInput'/>";
+	}
+	document.getElementById('playInput').addEventListener('keyup', isConsonant, false);
+}
 
+function vowelPass() {
+	vowelGuess();
+}
+
+function vowelGuess(consonant=0){
+	if (consonant) {
+		playSpace.innerHTML = consonant + "'s not a vowel! Please enter a vowel!<br/><input type='text' id='playInput'/>";
+	} else {
+		playSpace.innerHTML = "What vowel would you like?<br/><input type='text' id='playInput'/>";
+	}
+	document.getElementById('playInput').addEventListener('keyup', isVowel, false);
 }
 
 function flick(degrees){
 	document.getElementById("pointer").style.transform = "rotate("+degrees+"deg)";
 	document.getElementById("inner").style.transform = "rotate("+degrees+"deg)";
+}
+
+function stateFour() {
+	playSpace.innerHTML = "Make your final guess!<br/><input type='text' id='playInput'/><br/><button id='submit'>Submit</button>";
+	document.getElementById('playInput').focus();
+	document.getElementById('submit').addEventListener('click', finalGuess, false);
 }
 
 
